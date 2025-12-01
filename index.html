@@ -12,6 +12,32 @@
       max-width: 700px;
       margin: auto;
     }
+    nav {
+      background: #0077cc;
+      padding: 12px 0;
+      margin-bottom: 24px;
+      border-radius: 5px;
+    }
+    nav ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+    nav li {
+      margin: 0 18px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #ffee33;
+    }
     h1 {
       color: #0077cc;
     }
@@ -23,8 +49,15 @@
   </style>
 </head>
 <body>
+  <!-- Barra de navegación -->
+  <nav>
+    <ul>
+      <li><a href="index.html">Planning Principal</a></li>
+      <li><a href="checklist.html">Checklist</a></li>
+    </ul>
+  </nav>
+
   <h1>Planning de Viaje 2024</h1>
-  <a href="checklist.html">Ir al checklist de viaje ✅</a>
   <ul>
     <li><strong>Destino:</strong> París</li>
     <li><strong>Fechas:</strong> 1-10 Julio</li>
