@@ -5,10 +5,9 @@
   <title>Lista de pendientes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    /* ====== ESTILOS GENERALES (paleta nipona Harú Minimal) ====== */
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(120deg, #f7fafc 0%, #ede7f6 100%);
-      /* color: #232323; */
       background: #f7e5e8     /* Rosa Sakura palido */
       color: #636363          /* Gris grafito */
       padding: 0;
@@ -16,11 +15,10 @@
     }
     /* Menu de Navegacion */
     nav {
-      /* background: #8c5dad; */
       background: #b02e47; /*Rojo carmin Japones*/
       padding: 12px 0;
-      border-radius: 0 0 16px 16px;
-      box-shadow: 0 2px 8px rgba(140,93,173,0.08);
+      border-radius: 0 0 18px 18px;
+      box-shadow: 0 2px 8px rgba(176,46,71,0.08);
       margin-bottom: 32px;
     }
     nav ul {
@@ -34,7 +32,7 @@
       margin: 0 16px;
     }
     nav a {
-      color: #fff;
+      color: #fff;       /* Blanco puro */
       text-decoration: none;
       font-weight: bold;
       font-size: 1.1em;
@@ -42,50 +40,59 @@
       letter-spacing: 0.5px;
     }
     nav a:hover {
-      /* color: #ffe156; */
       color: #75b9be;     /* Azul celadon as highlight */
     }
+    
     /* Encabezado */
     .container {
       max-width: 600px;
       margin: 40px auto 0 auto;
-      /* background: #fff; */
       background: #f6e2b3;     /* Crema claro (washi) */
       border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(91,98,189,0.13);
+      box-shadow: 0 8px 32px rgba(176,46,71,0.10);
       padding: 32px 25px 25px 25px;
     }
     h1 {
-      /* color: #8c5dad; */
       color: #b02e47   /* Rojo Carmín */
       text-align: center;
       letter-spacing: 1px;
     }
-    /* Checklist */
+    
+    /* ====== ESTILOS DE LA CHECKLIST ====== */
     ul.checklist {
       list-style: none;
       padding: 0;
       margin-top: 20px;
+      min-height: 100px;
     }
     ul.checklist li {
       display: flex;
-      align-items: center;
-      background: #f1eeff;
+      align-items: flex-start;
+      background: #fff;          /* Blanco puro */
       border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(140,93,173,0.06);
-      padding: 14px 18px;
+      box-shadow: 0 2px 6px rgba(176,46,71,0.06);
+      padding: 14px 18px 14px 18px;
       margin-bottom: 14px;
       font-size: 1.14em;
       transition: box-shadow 0.25s;
-      border-left: 6px solid #75b9be;     /* toque azul celadon */
+      border-left: 6px solid #75b9be; /* Toque azul celadon */
+      position: relative;
+      flex-direction: column;
     }
     ul.checklist li:hover {
-      box-shadow: 0 4px 18px rgba(140,93,173,0.12);
-      border-left: 8px solid #b02e47;     /* acento carmín al pasar el ratón */
+      box-shadow: 0 4px 18px rgba(176,46,71,0.15);
+      border-left: 8px solid #b02e47; /* Acento carmín al pasar el ratón */
+    }
+
+    /* --- Agrupa icono, checkbox y texto para alinearlos --- */
+     .check-task {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 6px;
     }
     ul.checklist input[type="checkbox"] {
-      /* accent-color: #8c5dad; */
-      accent-color: #b02e47;     /* carmín japonés */
+      accent-color: #b02e47;     /* Carmín japonés */
       transform: scale(1.3);
       margin-right: 18px;
       cursor: pointer;
@@ -93,25 +100,49 @@
     ul.checklist .iconito {
       margin-right: 12px;
       font-size: 1.3em;
-      color: #75b9be;     /* Azul celadon */
+      color: #75b9be;            /* Azul celadon */
     }
-    @media (max-width: 650px) {
+     /* --- Tarea completada (tachado, color distinto) --- */
+    .completed .task-text {
+      text-decoration: line-through;
+      color: #262626 !important;     /* Más oscuro para destacar */
+      opacity: 0.70;
+      font-style: italic;
+    }
+    /* --- Campo de comentario debajo de cada tarea --- */
+    .comment-box {
+      margin-left: 37px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      width: 85%;
+      border-radius: 8px;
+      border: 1px solid #b02e47; /* Borde carmín */
+      background: #f6e2b3;       /* Fondo crema claro */
+      color: #636363;            /* Gris grafito */
+      font-size: 0.95em;
+      padding: 6px;
+      min-height: 30px;
+      max-height: 70px;
+      resize: vertical;
+    }
+    .comment-label {
+      font-size: 0.85em;
+      color: #b02e47;            /* Carmín */
+      margin-left: 40px;
+      margin-bottom: 2px;
+    }
+     @media (max-width: 650px) {
       .container {
         margin: 16px;
         padding: 14px 8px 10px 8px;
       }
-      ul.checklist li {
-        font-size: 1em;
-        padding: 10px 7px;
-      }
-      h1 {
-        font-size: 1.15em;
-      }
+      ul.checklist li { font-size: 1em; padding: 10px 7px; }
+      h1 { font-size: 1.15em; }
     }
   </style>
 </head>
 <body>
-  <!-- Menu de Navegacion -->
+  <!-- MENU DE NAVEGACIÓN -->
   <nav>
     <ul>
       <li><a href="index.html">Planning Principal</a></li>
@@ -119,17 +150,92 @@
     </ul>
   </nav>
 
-  <div class="container">
+  <!-- LISTA DE PENDIENTES -->
+   <div class="container">
     <h1>✍️ Lista de pendientes para el viaje</h1>
-    <ul class="checklist">
-      <li><span class="iconito">🛫</span><input type="checkbox">Comprar billetes de avión</li>
-      <li><span class="iconito">🏨</span><input type="checkbox">Reservar hotel</li>
-      <li><span class="iconito">🧳</span><input type="checkbox">Preparar maleta</li>
-      <li><span class="iconito">💳</span><input type="checkbox">Contratar seguro de viaje</li>
-      <li><span class="iconito">🔌</span><input type="checkbox">Comprar adaptador de enchufe</li>
-      <li><span class="iconito">🪪</span><input type="checkbox">Revisar documentación (DNI/pasaporte)</li>
-      <!-- Añade tus propias tareas aquí -->
+    <ul class="checklist" id="checklist">
+      <!-- Cada tarea es un <li> con icono, checkbox, texto y comentario -->
+      <li>
+        <div class="check-task">
+          <span class="iconito">🛫</span>
+          <input type="checkbox">
+          <span class="task-text">Comprar billetes de avión</span>
+        </div>
+        <!-- Campo de comentarios para cada tarea -->
+        <span class="comment-label">Comentarios:</span>
+        <textarea class="comment-box" placeholder="Escribe aquí el estado o actualización..."></textarea>
+      </li>
+      <li>
+        <div class="check-task">
+          <span class="iconito">🏨</span>
+          <input type="checkbox">
+          <span class="task-text">Reservar hotel</span>
+        </div>
+        <span class="comment-label">Comentarios:</span>
+        <textarea class="comment-box" placeholder="Escribe aquí el estado o actualización..."></textarea>
+      </li>
+      <li>
+        <div class="check-task">
+          <span class="iconito">🧳</span>
+          <input type="checkbox">
+          <span class="task-text">Preparar maleta</span>
+        </div>
+        <span class="comment-label">Comentarios:</span>
+        <textarea class="comment-box" placeholder="Escribe aquí el estado o actualización..."></textarea>
+      </li>
+      <li>
+        <div class="check-task">
+          <span class="iconito">💳</span>
+          <input type="checkbox">
+          <span class="task-text">Contratar seguro de viaje</span>
+        </div>
+        <span class="comment-label">Comentarios:</span>
+        <textarea class="comment-box" placeholder="Escribe aquí el estado o actualización..."></textarea>
+      </li>
+      <li>
+        <div class="check-task">
+          <span class="iconito">🔌</span>
+          <input type="checkbox">
+          <span class="task-text">Comprar adaptador de enchufe</span>
+        </div>
+        <span class="comment-label">Comentarios:</span>
+        <textarea class="comment-box" placeholder="Escribe aquí el estado o actualización..."></textarea>
+      </li>
+      <li>
+        <div class="check-task">
+          <span class="iconito">🪪</span>
+          <input type="checkbox">
+          <span class="task-text">Revisar documentación (DNI/pasaporte)</span>
+        </div>
+        <span class="comment-label">Comentarios:</span>
+        <textarea class="comment-box" placeholder="Escribe aquí el estado o actualización..."></textarea>
+      </li>
+      <!-- Añade más tareas aquí -->
     </ul>
   </div>
+  <script>
+    // Script para gestión de tareas (tachar y reordenar) ---
+    // Explicación:
+    // - Cuando cambias el estado del checkbox de una tarea, añade/quita la clase "completed",
+    //   aplica los estilos (tachado, color), y recoloca las tareas completadas al final,
+    //   asegurándose de que las pendientes estén siempre arriba.
+    const checklist = document.getElementById('checklist');
+    checklist.addEventListener('change', function (e) {
+      if (e.target && e.target.type === 'checkbox') {
+        const li = e.target.closest('li');
+        if (e.target.checked) {
+          li.classList.add('completed');
+          checklist.appendChild(li); // Mueve la tarea al final de la lista
+        } else {
+          li.classList.remove('completed');
+          // Busca el primer incompleto y lo inserta allí para mantener orden
+          const allItems = Array.from(checklist.children);
+          const firstIncomplete = allItems.find(item => !item.classList.contains('completed'));
+          checklist.insertBefore(li, firstIncomplete || null);
+        }
+      }
+    });
+    // FIN Script dinámico
+  </script>
 </body>
 </html>
