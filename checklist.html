@@ -36,9 +36,42 @@
       margin-top: 12px;
       display: inline-block;
     }
+    nav {
+    background: #0077cc;
+    padding: 12px 0;
+    margin-bottom: 24px;
+    border-radius: 5px;
+    }
+    nav ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
+    nav li {
+      margin: 0 18px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1em;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: #ffee33;
+    }
   </style>
 </head>
 <body>
+  <nav>
+  <ul>
+    <li><a href="index.html">Planning Principal</a></li>
+    <li><a href="checklist.html">Checklist</a></li>
+    <!-- Aquí puedes añadir más páginas a futuro -->
+  </ul>
+</nav>
   <h1>Checklist previo al viaje ✈️</h1>
   <ul>
     <li><input type="checkbox">Comprar billetes de avión</li>
