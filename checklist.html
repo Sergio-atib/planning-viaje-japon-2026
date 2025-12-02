@@ -216,34 +216,28 @@
   
   <!-- ====== PARTE FIREBASE: SCRIPTS NECESARIOS Y CONFIGURACIÓN ====== -->
   <!-- 1. Cargar los SDK oficiales de Firebase para web -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <!-- 2. Tu configuración personal de Firebase (cópiala desde Firebase Console) -->
   <script>
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "firebase/app";
     //  Pega aquí tu configuración de Firebase del paso anterior
     const firebaseConfig = {
-      apiKey: "AIzaSyC_mv4O8ztf8J-VSSKuTHBmt4BJg1aBf1I",
-      authDomain: "viajejapon2026-99e27.firebaseapp.com",
-      projectId: "viajejapon2026-99e27",
-      storageBucket: "viajejapon2026-99e27.firebasestorage.app",
-      messagingSenderId: "527321777056",
-      appId: "1:527321777056:web:ca5fbd403216da15965ac5"
+        apiKey: "AIzaSyC_mv4O8ztf8J-VSSKuTHBmt4BJg1aBf1I",
+        authDomain: "viajejapon2026-99e27.firebaseapp.com",
+        projectId: "viajejapon2026-99e27",
+        storageBucket: "viajejapon2026-99e27.appspot.com",
+        messagingSenderId: "527321777056",
+        appId: "1:527321777056:web:ca5fbd403216da15965ac5"
     };
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-
-    // Inicializa Firebase con estos datos únicos
+    // Inicializa Firebase y Firestore con el objeto global
     firebase.initializeApp(firebaseConfig);
-
-    // Inicializa acceso a Firestore (base de datos en la nube)
     const db = firebase.firestore();
   </script>
   <!-- 3. Lógica de la aplicación para guardar/leer comentarios usando Firebase Firestore -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const checklist = document.getElementById('checklist');
+      if (!checklist) return; // Por si acaso
       const tareas = checklist.querySelectorAll('li');
 
       // Recorre cada tarea
