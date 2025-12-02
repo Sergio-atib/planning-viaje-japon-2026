@@ -213,8 +213,66 @@
       <!-- Añade más tareas aquí -->
     </ul>
   </div>
+  
+  <!-- ====== PARTE FIREBASE: SCRIPTS NECESARIOS Y CONFIGURACIÓN ====== -->
+  <!-- 1. Cargar los SDK oficiales de Firebase para web -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  <!-- 2. Tu configuración personal de Firebase (cópiala desde Firebase Console) -->
   <script>
-    // Script para gestión de tareas (tachar y reordenar) ---
+    //  Pega aquí tu configuración de Firebase del paso anterior
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_mv4O8ztf8J-VSSKuTHBmt4BJg1aBf1I",
+      authDomain: "viajejapon2026-99e27.firebaseapp.com",
+      projectId: "viajejapon2026-99e27",
+      storageBucket: "viajejapon2026-99e27.firebasestorage.app",
+      messagingSenderId: "527321777056",
+      appId: "1:527321777056:web:ca5fbd403216da15965ac5"
+    };
+
+    // Inicializa Firebase con estos datos únicos
+    firebase.initializeApp(firebaseConfig);
+
+    // Inicializa acceso a Firestore (base de datos en la nube)
+    const db = firebase.firestore();
+    </script>
+  <!-- 3. Lógica de la aplicación para guardar/leer comentarios usando Firebase Firestore -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const checklist = document.getElementById('checklist');
+      const tareas = checklist.querySelectorAll('li');
+
+      // Recorre cada tarea
+      tareas.forEach(function(li, idx) {
+        const textarea = li.querySelector('.comment-box');
+        // Creamos un identificador único por tarea (puedes mejorarlo si añades o quitas tareas)
+        const tareaId = `tarea-${idx}`;
+        // ------------- LEER COMENTARIO de Firebase al cargar la página -------------
+        db.collection('comentarios').doc(tareaId).get()
+          .then(doc => {
+            if (doc.exists) {
+              textarea.value = doc.data().texto || '';
+            }
+          })
+          .catch(error => {
+            // Si hay algún error leyendo, puedes mostrarlo por consola:
+            console.error(`Error obteniendo comentario de ${tareaId}:`, error);
+          });
+        // ------------- GUARDAR COMENTARIO en Firebase cada vez que escribes -------------
+        textarea.addEventListener('input', function () {
+          db.collection('comentarios').doc(tareaId).set({
+            texto: textarea.value
+          }).catch(error => {
+            // Si ocurre un error al guardar
+            console.error(`Error guardando comentario en ${tareaId}:`, error);
+          });
+        });
+      });
+    });
+  </script>
+
+  <!-- ====== SCRIPT PARA GESTIONAR TAREAS (TACHAR Y REORDENAR) ====== -->
+  <script>
     // Explicación:
     // - Cuando cambias el estado del checkbox de una tarea, añade/quita la clase "completed",
     //   aplica los estilos (tachado, color), y recoloca las tareas completadas al final,
@@ -234,28 +292,6 @@
           checklist.insertBefore(li, firstIncomplete || null);
         }
       }
-    });
-     // ======== Script para Guardar y recuperar comentarios en localStorage ========
-    // Usamos localStorage, así cada comentario de cada tarea se queda guardado
-    // aunque recargues la página o la vuelvas a abrir (en ese navegador/dispositivo)
-    document.addEventListener('DOMContentLoaded', function () {
-      // Obtener todas las tareas (<li>) de la lista
-      const tareas = checklist.querySelectorAll('li');
-      tareas.forEach(function (li, idx) {
-        // Cada campo comentario
-        const textarea = li.querySelector('.comment-box');
-        // --- NUEVO: Damos una clave única por tarea (puedes mejorar el identificador si lo deseas)
-        const storageKey = 'pendiente-comentario-' + idx;
-
-        // Al cargar la página, recuperamos el valor guardado (si existe) y lo mostramos
-        const savedComment = localStorage.getItem(storageKey);
-        if (savedComment) textarea.value = savedComment;
-
-        // Cada vez que escribes algo (keyup), lo guardamos
-        textarea.addEventListener('input', function () {
-          localStorage.setItem(storageKey, textarea.value);
-        });
-      });
     });
   </script>
 </body>
