@@ -42,7 +42,6 @@
     nav a:hover {
       color: #75b9be;     /* Azul celadon as highlight */
     }
-    
     /* Encabezado */
     .container {
       max-width: 600px;
@@ -83,7 +82,6 @@
       box-shadow: 0 4px 18px rgba(176,46,71,0.15);
       border-left: 8px solid #b02e47; /* Acento carmín al pasar el ratón */
     }
-
     /* --- Agrupa icono, checkbox y texto para alinearlos --- */
      .check-task {
       display: flex;
@@ -108,6 +106,23 @@
       color: #262626 !important;     /* Más oscuro para destacar */
       opacity: 0.70;
       font-style: italic;
+    }
+    /* Oscurecer tareas completadas */
+    li.completed {
+      background: #eef0f3;   /* Gris clarito */
+      color: #888;           /* Texto gris medio */
+      opacity: 0.6;          /* Menos relevante */
+      box-shadow: none;      /* Sin sombra */
+      border-left: 4px solid #c7cbd1; /* Borde sutil */
+      transition: background 0.3s, opacity 0.3s, color 0.3s;
+    }
+    /* Opcional: el checkbox también se atenúa */
+    li.completed input[type="checkbox"] {
+      filter: grayscale(1);
+    }
+    /* (Opcional) Tachado del texto de la tarea, si tienes una clase de texto */
+    li.completed .task-label {
+      text-decoration: line-through;
     }
     /* --- Campo de comentario debajo de cada tarea --- */
     .comment-box {
@@ -156,7 +171,6 @@
         transform: translateY(40px) scale(0.95);
       }
     }
-    
     /* Animación al entrar abajo: difuminado entrando */
     .li-enter {
       animation: fadeInDown 0.5s forwards;
