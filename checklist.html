@@ -235,7 +235,28 @@
         }
       }
     });
-    // FIN Script dinámico
+     // ======== Script para Guardar y recuperar comentarios en localStorage ========
+    // Usamos localStorage, así cada comentario de cada tarea se queda guardado
+    // aunque recargues la página o la vuelvas a abrir (en ese navegador/dispositivo)
+    document.addEventListener('DOMContentLoaded', function () {
+      // Obtener todas las tareas (<li>) de la lista
+      const tareas = checklist.querySelectorAll('li');
+      tareas.forEach(function (li, idx) {
+        // Cada campo comentario
+        const textarea = li.querySelector('.comment-box');
+        // --- NUEVO: Damos una clave única por tarea (puedes mejorar el identificador si lo deseas)
+        const storageKey = 'pendiente-comentario-' + idx;
+
+        // Al cargar la página, recuperamos el valor guardado (si existe) y lo mostramos
+        const savedComment = localStorage.getItem(storageKey);
+        if (savedComment) textarea.value = savedComment;
+
+        // Cada vez que escribes algo (keyup), lo guardamos
+        textarea.addEventListener('input', function () {
+          localStorage.setItem(storageKey, textarea.value);
+        });
+      });
+    });
   </script>
 </body>
 </html>
