@@ -139,6 +139,38 @@
       ul.checklist li { font-size: 1em; padding: 10px 7px; }
       h1 { font-size: 1.15em; }
     }
+
+        
+    /* ====== ANIMACION PARA LA CHECKLIST ====== */
+    /* Animación al completar: difuminado saliendo */
+    .li-exit {
+      animation: fadeOutUp 0.5s forwards;
+    }
+    @keyframes fadeOutUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+    }
+    
+    /* Animación al entrar abajo: difuminado entrando */
+    .li-enter {
+      animation: fadeInDown 0.5s forwards;
+    }
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
   </style>
 </head>
 <body>
@@ -280,14 +312,38 @@
       if (e.target && e.target.type === 'checkbox') {
         const li = e.target.closest('li');
         if (e.target.checked) {
-          li.classList.add('completed');
-          checklist.appendChild(li); // Mueve la tarea al final de la lista
+          // 1. Aplica animación de salida
+          li.classList.add('li-exit');
+          // 2. Cuando termine, lo mueve al final y lo muestra con animación de entrada
+          li.addEventListener('animationend', function handler() {
+            li.classList.remove('li-exit');
+            li.classList.add('completed');
+            checklist.appendChild(li);
+            li.classList.add('li-enter');
+            // Borra la clase de entrada después que termina
+            li.addEventListener('animationend', function handler2() {
+              li.classList.remove('li-enter');
+              li.removeEventListener('animationend', handler2);
+            });
+            li.removeEventListener('animationend', handler);
+          });
         } else {
-          li.classList.remove('completed');
-          // Busca el primer incompleto y lo inserta allí para mantener orden
-          const allItems = Array.from(checklist.children);
-          const firstIncomplete = allItems.find(item => !item.classList.contains('completed'));
-          checklist.insertBefore(li, firstIncomplete || null);
+          // Lo quitamos de completed, lo subimos arriba con animación también
+          li.classList.add('li-exit');
+          li.addEventListener('animationend', function handler() {
+            li.classList.remove('li-exit');
+            li.classList.remove('completed');
+            // Mueve arriba
+            const allItems = Array.from(checklist.children);
+            const firstIncomplete = allItems.find(item => !item.classList.contains('completed'));
+            checklist.insertBefore(li, firstIncomplete || null);
+            li.classList.add('li-enter');
+            li.addEventListener('animationend', function handler2() {
+              li.classList.remove('li-enter');
+              li.removeEventListener('animationend', handler2);
+            });
+            li.removeEventListener('animationend', handler);
+          });
         }
       }
     });
