@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>Lista de pendientes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Fuente Google para un toque japonés limpio y sutil -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* ====== ESTILOS GENERALES (paleta nipona Harú Minimal) ====== */
     body {
@@ -15,7 +17,9 @@
       background-blend-mode: multiply;
       background-repeat: repeat;
       background-size: auto;
+      font-family: 'Noto Sans JP', Arial, sans-serif;
     }
+    /* DECORACIÓN FONDO: Rama de Sakura, o prueba Fuji/Olas cambiando la url del SVG */
     body::after {
       content: "";
       position: fixed;
@@ -23,8 +27,13 @@
       width: 280px; height: 180px;
       opacity: 0.13;
       pointer-events: none;
+      /* Rama de sakura: */
       background: url('https://raw.githubusercontent.com/kupanets/svg-icons-collections/master/sakura/sakura-branch.svg') no-repeat bottom right;
       background-size: contain;
+      /* Puedes probar olas seigaiha (pon esta url y comenta la otra):
+      background: url('https://svgshare.com/i/122i.svg') no-repeat bottom right;      */
+      /* O Monte Fuji minimal:
+      background: url('https://svgshare.com/i/11zz.svg') no-repeat bottom right;      */
     }
     /* Menu de Navegacion */
     nav {
@@ -49,13 +58,18 @@
       text-decoration: none;
       font-weight: bold;
       font-size: 1.1em;
-      transition: color 0.2s;
+      transition: color 0.2s, border-bottom 0.2s;
       letter-spacing: 0.5px;
+      padding-bottom: 3px;
+      border-bottom: 2px solid transparent;
+      /* <-- ACTIVO minimalista japonés: */
     }
-    nav a:hover {
-      color: #75b9be;     /* Azul celadon as highlight */
+    nav a:hover,
+    nav a.active {
+      color: #75b9be;
+      border-bottom: 2px solid #75b9be;
     }
-    /* Encabezado */
+    /* ENCABEZADO */
     .container {
       max-width: 600px;
       margin: 40px auto 0 auto;
@@ -65,9 +79,13 @@
       padding: 32px 25px 25px 25px;
     }
     h1 {
-      color: #b02e47   /* Rojo Carmín */
+      color: #b02e47;   /* Rojo carmín */
       text-align: center;
       letter-spacing: 1px;
+      font-family: 'Noto Sans JP', Arial, sans-serif;
+      font-size: 2em;
+      margin-top: 0;
+      margin-bottom: 22px;
     }
     
     /* ====== ESTILOS DE LA CHECKLIST ====== */
@@ -113,11 +131,7 @@
       font-size: 1.3em;
       color: #75b9be;            /* Azul celadon */
     }
-    li {
-      border-left: 4px solid #a9a39d;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px 0 rgba(214, 210, 198, 0.08);
-    }
+
      /* --- Tarea completada (tachado, color distinto) --- */
     .completed .task-text {
       text-decoration: line-through;
@@ -125,7 +139,7 @@
       opacity: 0.70;
       font-style: italic;
     }
-    /* Oscurecer tareas completadas */
+    /* Oscurecer tareas completadas, el checkbox y el texto de la tarea */
     li.completed {
       background: #eef0f3;   /* Gris clarito */
       color: #888;           /* Texto gris medio */
@@ -134,11 +148,9 @@
       border-left: 4px solid #c7cbd1; /* Borde sutil */
       transition: background 0.3s, opacity 0.3s, color 0.3s;
     }
-    /* Opcional: el checkbox también se atenúa */
     li.completed input[type="checkbox"] {
       filter: grayscale(1);
     }
-    /* (Opcional) Tachado del texto de la tarea, si tienes una clase de texto */
     li.completed .task-label {
       text-decoration: line-through;
     }
