@@ -351,42 +351,108 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
   </script>
-  <!-- 3. Lógica de la aplicación para guardar/leer comentarios usando Firebase Firestore -->
+  <!-- 3. Lógica de la aplicación para guardar/leer comentarios y estados usando Firebase Firestore -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const checklist = document.getElementById('checklist');
-      if (!checklist) return; // Por si acaso
-      const tareas = checklist.querySelectorAll('li');
+  document.addEventListener('DOMContentLoaded', async function () {
+    const checklist = document.getElementById('checklist');
+    if (!checklist) return;
+    // Tomamos todos los <li> (tareas) visibles en el DOM
+    const tareas = Array.from(checklist.querySelectorAll('li'));
+  
+    // --- Estrategia:
+    // Por cada tarea:
+    //  1) Obtener su textarea (comentario) y su checkbox (id único).
+    //  2) Leer de Firestore el documento con id = checkbox.id (ej: "tarea-0").
+    //  3) Si existe, cargar 'texto' en el textarea y 'completed' en el checkbox.
+    //  4) Escuchar cambios en textarea para guardar {texto: ...} (merge).
+    //  5) Escuchar cambios en checkbox para guardar {completed: true/false} (merge).
+    // Al cargar, las tareas ya completadas se marcarán visualmente y se moverán
+    // al final de la lista (sin animación) para mantener el orden lógico.
 
-      // Recorre cada tarea
-      tareas.forEach(function(li, idx) {
-        const textarea = li.querySelector('.comment-box');
-        // Creamos un identificador único por tarea (puedes mejorarlo si añades o quitas tareas)
-        const tareaId = `tarea-${idx}`;
-        // ------------- LEER COMENTARIO de Firebase al cargar la página -------------
-        db.collection('comentarios').doc(tareaId).get()
-          .then(doc => {
-            if (doc.exists) {
-              textarea.value = doc.data().texto || '';
-            }
-          })
-          .catch(error => {
-            // Si hay algún error leyendo, puedes mostrarlo por consola:
-            console.error(`Error obteniendo comentario de ${tareaId}:`, error);
-          });
-        // ------------- GUARDAR COMENTARIO en Firebase cada vez que escribes -------------
-        textarea.addEventListener('input', function () {
-          db.collection('comentarios').doc(tareaId).set({
-            texto: textarea.value
-          }).catch(error => {
-            // Si ocurre un error al guardar
-            console.error(`Error guardando comentario en ${tareaId}:`, error);
-          });
-        });
-      });
+    // Hacemos una lectura en paralelo de todos los documentos para carga más rápida
+    // (opcionalmente podrías cargar por tarea, pero esto reduce latencia).
+    const docIds = tareas.map((li, idx) => {
+      const input = li.querySelector('input[type="checkbox"]');
+      return input ? input.id : `tarea-${idx}`;
     });
+    // Recupera todos los documentos de una sola vez (batch)
+    // Construimos promesas individuales de get() y las esperamos todas
+    const fetchPromises = docIds.map(id => {
+      return db.collection('comentarios').doc(id).get()
+        .then(docSnap => ({ id, docSnap }))
+        .catch(err => ({ id, error: err }));
+    });
+    const results = await Promise.all(fetchPromises);
+    // Procesar resultados: aplicar comentarios y estados
+    results.forEach(res => {
+      const { id, docSnap, error } = res;
+      const idx = docIds.indexOf(id);
+      if (idx === -1) return; // por seguridad
+      const li = tareas[idx];
+      const textarea = li.querySelector('.comment-box');
+      const checkbox = li.querySelector('input[type="checkbox"]');
+      // Si hubo error leyendo, lo mostramos por consola y continuamos
+      if (error) {
+        console.error(`Error leyendo doc ${id}:`, error);
+      }
+      if (docSnap && docSnap.exists) {
+        const data = docSnap.data();
+        // Cargar texto del comentario si existe
+        if (textarea && typeof data.texto === 'string') {
+          textarea.value = data.texto;
+        }
+        // Cargar estado completado si existe
+        if (checkbox) {
+          const completed = !!data.completed; // fuerza booleano
+          checkbox.checked = completed;
+          if (completed) {
+            // Aplicamos la clase 'completed' **sin animación** en la carga inicial
+            li.classList.add('completed');
+            // Lo movemos al final del checklist (preserva el orden de los completados)
+            checklist.appendChild(li);
+          }
+        }
+      } else {
+        // Documento no existe: dejamos los valores por defecto (textarea vacío, unchecked)
+        if (checkbox) checkbox.checked = false;
+      }
+      // ----------- Escuchadores para GUARDAR cambios en Firestore -----------
+      // Guardar comentario al escribir (merge para no sobreescribir 'completed')
+      if (textarea) {
+        // Debounce simple para reducir escrituras excesivas (300ms)
+        let saveTimeout = null;
+        textarea.addEventListener('input', function () {
+          if (saveTimeout) clearTimeout(saveTimeout);
+          saveTimeout = setTimeout(() => {
+            db.collection('comentarios').doc(id).set({ texto: textarea.value }, { merge: true })
+              .catch(err => console.error(`Error guardando comentario ${id}:`, err));
+          }, 300);
+        });
+      }
+      // Guardar estado del checkbox al cambiar
+      if (checkbox) {
+        checkbox.addEventListener('change', function () {
+          const isChecked = checkbox.checked;
+  
+          // Guardar solo el campo 'completed' (merge = true)
+          db.collection('comentarios').doc(id).set({ completed: isChecked }, { merge: true })
+            .catch(err => console.error(`Error guardando estado ${id}:`, err));
+          // Aplicar visual inmediato + animaciones de tu script existente.
+          // Si quieres una animación personalizada al marcar, se gestiona en el listener global de 'change'
+          // que ya tienes más abajo. Sin embargo, para evitar duplicar movimiento aquí,
+          // solo tocamos la clase 'completed' y dejamos que el listener existente haga la animación/movimiento.
+          if (isChecked) {
+            li.classList.add('completed');
+          } else {
+            li.classList.remove('completed');
+          }
+        });
+      }
+    });
+  });
   </script>
 
+  
   <!-- ====== SCRIPT PARA GESTIONAR TAREAS (TACHAR Y REORDENAR) ====== -->
   <script>
     // Explicación:
