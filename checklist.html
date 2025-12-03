@@ -2,15 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lista de pendientes</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Fuente Google para un toque japonés limpio y sutil -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
   <style>
     /* ====== ESTILOS GENERALES (paleta nipona Harú Minimal) ====== */
     body {
       min-height: 100vh;
-      background: linear-gradient(to bottom, #faf9f6 0%, #f7efd2 100%);
+      background: linear-gradient(135deg, #fffbe7 40%, #fde6ca 100%);
       background-image:
         url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAyCAYAAAC7rhPfAAAADUlEQVQYV2NkYGBgYAAA/QCQQcoRyQAAAABJRU5ErkJggg=='),
         linear-gradient(to bottom, #faf9f6 0%, #f7efd2 100%);
@@ -18,22 +18,36 @@
       background-repeat: repeat;
       background-size: auto;
       font-family: 'Noto Sans JP', Arial, sans-serif;
+      position: relative;
     }
     /* DECORACIÓN FONDO: Rama de Sakura, o prueba Fuji/Olas cambiando la url del SVG */
     body::after {
       content: "";
       position: fixed;
       bottom: 0; right: 0;
-      width: 280px; height: 180px;
-      opacity: 0.2;
+      width: 340px; height: 220px;
+      opacity: 0.20; /* Transparencia del dibujo */
+      pointer-events: none; /* Hace que no interfiera con clics */
+      background: url('assets/svg/cherry-blossom.svg') no-repeat bottom right;
+      /* background: url('https://sergio-atib.github.io/planning-viaje-japon-2026/assets/svg/cherry-blossom.svg') no-repeat bottom right; */
+      background-size: contain;
+      z-index: 0; /* Mantiene la ilustración detrás del contenido */
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 220px; height: 120px;
+      opacity: 0.14;
       pointer-events: none;
-      /* Rama de sakura: */
-      background: url('https://sergio-atib.github.io/planning-viaje-japon-2026/assets/svg/cherry-blossom.svg') no-repeat bottom right;
-      background-size: contain;                                                     
-      /* Puedes probar olas seigaiha (pon esta url y comenta la otra):
-      background: url('https://svgshare.com/i/122i.svg') no-repeat bottom right;      */
-      /* background: url('https://svgshare.com/i/11zz.svg') no-repeat bottom right;   
-      background-size: contain; */
+      background: url('assets/svg/cherry-blossom.svg') no-repeat top left;
+      background-size: contain;
+      transform: scaleX(-1) rotate(-13deg);
+      z-index: 0;
+    }
+    .main-content {
+      position: relative;
+      z-index: 1;
     }
     /* Menu de Navegacion */
     nav {
