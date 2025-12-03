@@ -451,7 +451,87 @@
     });
   });
   </script>
-
+  <!-- 4. Reordenamiento de pendientes manual Drag & Drop con guardado en Firebase -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const checklist = document.getElementById("checklist");
+    if (!checklist) return;
+    let draggedItem = null;
+    // Hacer que todos los <li> sean arrastrables
+    checklist.querySelectorAll("li").forEach((li) => {
+      li.setAttribute("draggable", "true");
+      li.addEventListener("dragstart", function () {
+        draggedItem = this;
+        this.classList.add("dragging");
+      });
+      li.addEventListener("dragend", async function () {
+        this.classList.remove("dragging");
+        draggedItem = null;
+        // Cuando el usuario deja de arrastrar, guardamos el nuevo orden
+        const items = Array.from(checklist.children);
+        for (let i = 0; i < items.length; i++) {
+          const checkbox = items[i].querySelector("input[type='checkbox']");
+          if (!checkbox) continue;
+          const id = checkbox.id;
+          // Guardamos la posición "i" en Firestore
+          await db.collection("comentarios")
+            .doc(id)
+            .set({ pos: i }, { merge: true });
+        }
+      });
+    });
+    // Permitir soltar entre elementos
+    checklist.addEventListener("dragover", function (e) {
+      e.preventDefault();
+      const afterElement = getDragAfterElement(checklist, e.clientY);
+      const dragging = checklist.querySelector(".dragging");
+  
+      if (!afterElement) checklist.appendChild(dragging);
+      else checklist.insertBefore(dragging, afterElement);
+    });
+    // Función que detecta dónde insertar
+    function getDragAfterElement(container, y) {
+      const elements = [...container.querySelectorAll("li:not(.dragging)")];
+      return elements.reduce(
+        (closest, child) => {
+          const rect = child.getBoundingClientRect();
+          const offset = y - rect.top - rect.height / 2;
+          if (offset < 0 && offset > closest.offset)
+            return { offset: offset, element: child };
+          else return closest;
+        },
+        { offset: Number.NEGATIVE_INFINITY }
+      ).element;
+    }
+    // --- REORDENAR SEGÚN FIREBASE EN LA CARGA ---
+    async function applySavedOrder() {
+      const items = Array.from(checklist.children);
+      const fetches = items.map((li) => {
+        const checkbox = li.querySelector("input[type='checkbox']");
+        if (!checkbox) return null;
+        return db.collection("comentarios").doc(checkbox.id).get();
+      });
+      const results = await Promise.all(fetches);
+      let ordered = [];
+      // Creamos array con { li, pos }
+      results.forEach((docSnap, i) => {
+        if (!docSnap) return;
+        const li = items[i];
+        let pos = 9999; // por defecto, al final
+        if (docSnap.exists && typeof docSnap.data().pos === "number") {
+          pos = docSnap.data().pos;
+        }
+        ordered.push({ li, pos });
+      });
+      //Ordenamos por "pos"
+      ordered.sort((a, b) => a.pos - b.pos);
+      // Insertamos en el orden correcto sin animaciones
+      ordered.forEach((entry) => checklist.appendChild(entry.li));
+    }
+    applySavedOrder();
+  });
+  </script>
+  
   
   <!-- ====== SCRIPT PARA GESTIONAR TAREAS (TACHAR Y REORDENAR) ====== -->
   <script>
