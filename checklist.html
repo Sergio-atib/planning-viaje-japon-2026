@@ -134,25 +134,25 @@
       width: 100%;
       margin-bottom: 6px;
     }
-    ul.checklist input[type="checkbox"] {
+    .check-task input[type="checkbox"] {
       accent-color: #b02e47;     /* Carmín japonés */
       transform: scale(1.3);
-      margin-right: 18px;
+      margin-right: 12px;
       cursor: pointer;
     }
-    ul.checklist .iconito {
+    .check-task .iconito {
       margin-right: 12px;
       font-size: 1.3em;
       color: #75b9be;            /* Azul celadon */
     }
+    /* Texto de la tarea dentro de label */
+    .check-task .task-text {
+      cursor: pointer; /* El puntero indica que es clicable */
+      user-select: none; /* Evita seleccionar el texto al hacer click en label */
+      flex: 1; /* Ocupa todo el espacio disponible */
+    }
 
      /* --- Tarea completada (tachado, color distinto) --- */
-    .completed .task-text {
-      text-decoration: line-through;
-      color: #262626 !important;     /* Más oscuro para destacar */
-      opacity: 0.70;
-      font-style: italic;
-    }
     /* Oscurecer tareas completadas, el checkbox y el texto de la tarea */
     li.completed {
       background: #eef0f3;   /* Gris clarito */
@@ -162,11 +162,15 @@
       border-left: 4px solid #c7cbd1; /* Borde sutil */
       transition: background 0.3s, opacity 0.3s, color 0.3s;
     }
+    /* Tarea completada */
+    li.completed label.task-text {
+      text-decoration: line-through;
+      color: #262626;
+      opacity: 0.7;
+      font-style: italic;
+    }
     li.completed input[type="checkbox"] {
       filter: grayscale(1);
-    }
-    li.completed .task-label {
-      text-decoration: line-through;
     }
     /* --- Campo de comentario debajo de cada tarea --- */
     .comment-box {
@@ -175,9 +179,9 @@
       margin-bottom: 4px;
       width: 85%;
       border-radius: 8px;
-      border: 1px solid #b02e47; /* Borde carmín */
-      background: #f6e2b3;       /* Fondo crema claro */
-      color: #636363;            /* Gris grafito */
+      border: 1px solid #b02e47;
+      background: #f6e2b3;
+      color: #636363;
       font-size: 0.95em;
       padding: 6px;
       min-height: 30px;
@@ -197,6 +201,18 @@
       }
       ul.checklist li { font-size: 1em; padding: 10px 7px; }
       h1 { font-size: 1.15em; }
+      .check-task .iconito {
+          font-size: 1.1em; /* Iconos más pequeños en móvil */
+          margin-right: 8px;
+      }
+     .check-task input[type="checkbox"] {
+        transform: scale(1.2);
+        margin-right: 8px;
+      }
+      .comment-box {
+        width: 100%; /* Ocupa todo el contenedor */
+        margin-left: 0; /* Ajusta margen para móvil */
+      }
     }
 
         
@@ -248,9 +264,9 @@
       <li>
         <div class="check-task">
           <span class="iconito">🛫</span>
-          <label class="task-label">
-            <input type="checkbox">
-            <span class="task-text">Comprar billetes de avión</span>
+          <label class="task-text">
+            <input type="checkbox" id="tarea-0">
+            Comprar billetes de avión
           </label>
         </div>
         <!-- Campo de comentarios para cada tarea -->
@@ -260,9 +276,9 @@
       <li>
         <div class="check-task">
           <span class="iconito">🏨</span>
-          <label class="task-label">
-            <input type="checkbox">
-            <span class="task-text">Reservar hotel</span>
+          <label class="task-text">
+            <input type="checkbox" id="tarea-1">
+            Reservar hotel
           </label>
         </div>
         <span class="comment-label">Comentarios:</span>
@@ -271,9 +287,9 @@
       <li>
         <div class="check-task">
           <span class="iconito">🧳</span>
-          <label class="task-label">
-            <input type="checkbox">
-            <span class="task-text">Preparar maleta</span>
+          <label class="task-text">
+            <input type="checkbox" id="tarea-2">
+            Preparar maleta
           </label>
         </div>
         <span class="comment-label">Comentarios:</span>
@@ -282,9 +298,9 @@
       <li>
         <div class="check-task">
           <span class="iconito">💳</span>
-          <label class="task-label">
-            <input type="checkbox">
-            <span class="task-text">Contratar seguro de viaje</span>
+          <label class="task-text">
+            <input type="checkbox" id="tarea-3">
+            Contratar seguro de viaje
           </label>
         </div>
         <span class="comment-label">Comentarios:</span>
@@ -293,9 +309,9 @@
       <li>
         <div class="check-task">
           <span class="iconito">🔌</span>
-          <label class="task-label">
-            <input type="checkbox">
-            <span class="task-text">Comprar adaptador de enchufe</span>
+          <label class="task-text">
+            <input type="checkbox" id="tarea-4">
+            Comprar adaptador de enchufe
           </label>
         </div>
         <span class="comment-label">Comentarios:</span>
@@ -304,9 +320,9 @@
       <li>
         <div class="check-task">
           <span class="iconito">🪪</span>
-          <label class="task-label">
-            <input type="checkbox">
-            <span class="task-text">Revisar documentación (DNI/pasaporte)</span>
+          <label class="task-text">
+            <input type="checkbox" id="tarea-5">
+            Revisar documentación (DNI/pasaporte)
           </label>
         </div>
         <span class="comment-label">Comentarios:</span>
