@@ -565,10 +565,22 @@
           li.addEventListener('animationend', function handler() {
             li.classList.remove('li-exit');
             li.classList.remove('completed');
-            // Mueve arriba
-            const allItems = Array.from(checklist.children);
-            const firstIncomplete = allItems.find(item => !item.classList.contains('completed'));
-            checklist.insertBefore(li, firstIncomplete || null);
+            // --- NUEVO: volver la tarea a su posición guardada ---
+            const id = checkbox.id;
+            const liElement = li;
+            // Pedimos a Firebase la posición guardada
+            db.collection("comentarios").doc(id).get().then(doc => {
+              if (doc.exists && typeof doc.data().pos === "number") {
+                const savedPos = doc.data().pos;
+                const items = Array.from(checklist.children);
+                // Insertar la tarea según su posición
+                if (savedPos >= items.length - 1) {
+                  checklist.appendChild(liElement);
+                } else {
+                  checklist.insertBefore(liElement, items[savedPos]);
+                }
+              }
+            });
             li.classList.add('li-enter');
             li.addEventListener('animationend', function handler2() {
               li.classList.remove('li-enter');
