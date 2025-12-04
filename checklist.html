@@ -172,22 +172,23 @@
       background-color: #f0f0f0;
       box-shadow: 0 6px 14px rgba(0,0,0,0.15);
     }
-    
-    /* Animación cuando entra */
+    li.dragging {
+      opacity: 0.5;         /* Se atenúa */
+      transform: scale(0.98); /* Un pequeño encogimiento */
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+        /* Animación cuando entra */
     .li-enter {
       animation: liFadeIn 0.25s ease-out;
     }
-    
-    @keyframes liFadeIn {
+        @keyframes liFadeIn {
       from { opacity: 0; transform: translateY(-8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    
-    /* Animación cuando sale */
+        /* Animación cuando sale */
     .li-exit {
       animation: liFadeOut 0.25s ease-in forwards;
     }
-    
     @keyframes liFadeOut {
       from { opacity: 1; transform: translateY(0); }
       to   { opacity: 0; transform: translateY(8px); }
